@@ -2,6 +2,8 @@
 
 A full-stack personal finance tracker for managing income, expenses, budgets, and account settings. The frontend is a React/Vite app; the Express API uses Prisma with PostgreSQL. It can run locally against a Neon database and deploy to Vercel without Docker.
 
+**Live demo:** [https://expense-tracker-tawny-iota-36.vercel.app](https://expense-tracker-tawny-iota-36.vercel.app/)
+
 ## Features
 
 - Register, sign in, and stay signed in across browser visits
