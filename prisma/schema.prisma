@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                    Int                    @id @default(autoincrement())
+  email                 String                 @unique
+  password              String
+  resetToken            String?                @unique
+  resetExpiry           DateTime?
+  createdAt             DateTime               @default(now())
+  transactions          Transaction[]
+  budgets               Budget[]
+  savingsGoals          SavingsGoal[]
+  recurringTransactions RecurringTransaction[]
+}
+
+model Budget {
+  id        Int      @id @default(autoincrement())
+  category  String
+  amount    Float
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, category])
+}
+
+model Transaction {
+  id          Int      @id @default(autoincrement())
+  description String
+  amount      Float
+  type        String
+  category    String
+  date        String
+  createdAt   DateTime @default(now())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model SavingsGoal {
+  id           Int       @id @default(autoincrement())
+  userId       Int
+  user         User      @relation(fields: [userId], references: [id])
+  name         String
+  targetAmount Float
+  currentAmount Float    @default(0)
+  category     String?
+  targetDate   DateTime?
+  notes        String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model RecurringTransaction {
+  id               Int       @id @default(autoincrement())
+  userId           Int
+  user             User      @relation(fields: [userId], references: [id])
+  description      String
+  amount           Float
+  type             String
+  category         String
+  frequency        String    @default("monthly")
+  dayOfMonth       Int?
+  nextDate         String
+  isActive         Boolean   @default(true)
+  lastGeneratedAt  DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
