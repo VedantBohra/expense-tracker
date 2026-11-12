@@ -14,6 +14,7 @@ const prisma = new PrismaClient({ adapter });
 const app = express();
 const PORT = 3000;
 
+app.set('trust proxy', 1);
 app.use(express.json());
 
 const authLimiter = rateLimit({
@@ -511,7 +512,10 @@ app.post('/api/recurring-transactions/process-due', requireAuth, async (req, res
   }
 });
 
-// Global error handler
+app.use('/api', (req, res) => {
+  res.status(404).json({ error: 'Not found' });
+});
+
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ error: 'Internal server error' });
